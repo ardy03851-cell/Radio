@@ -8,16 +8,14 @@
   <style>
     :root {
       --bg: #0a0a0c;
-      --panel: #141418;
-      --panel-2: #1a1a1f;
-      --panel-3: #212127;
-      --line: #2a2a31;
-      --line-2: #34343d;
+      --surface: #121216;
+      --surface-2: #1a1a1f;
+      --line: #232329;
+      --line-2: #2e2e36;
       --text: #ececef;
-      --dim: #88888f;
-      --faint: #4e4e57;
+      --dim: #8a8a92;
+      --faint: #4a4a52;
       --accent: #e6543a;
-      --accent-dk: #b83a24;
       --green: #4a9d68;
       --amber: #d99a2b;
       --mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
@@ -34,281 +32,108 @@
     html,
     body {
       height: 100%;
+      overflow: hidden;
     }
 
     body {
       background: var(--bg);
-      background-image:
-        radial-gradient(circle at 20% 0%, rgba(230, 84, 58, 0.05), transparent 50%),
-        radial-gradient(circle at 80% 100%, rgba(80, 120, 200, 0.04), transparent 40%),
-        radial-gradient(circle, rgba(255, 255, 255, 0.018) 1px, transparent 1.2px);
-      background-size: auto, auto, 22px 22px;
-      font-family: var(--sans);
       color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100dvh;
-      padding: 20px;
+      font-family: var(--sans);
       -webkit-font-smoothing: antialiased;
-    }
-
-    /* ============ PANEL ============ */
-    .radio {
-      position: relative;
-      width: 100%;
-      max-width: 640px;
-      background: var(--panel);
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      border-top-color: #3a3a44;
-      box-shadow:
-        0 30px 60px rgba(0, 0, 0, 0.7),
-        0 2px 0 rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.03);
-      overflow: hidden;
-      animation: panel-in 0.5s var(--eo) both;
-    }
-
-    @keyframes panel-in {
-      from {
-        opacity: 0;
-        transform: translateY(14px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* corner screws */
-    .screw {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #4a4a54, #1e1e24 70%);
-      box-shadow: inset 0 0 0 1px #0a0a0c, 0 1px 0 rgba(255, 255, 255, 0.05);
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    .screw.tl {
-      top: 8px;
-      left: 8px;
-    }
-
-    .screw.tr {
-      top: 8px;
-      right: 8px;
-    }
-
-    .screw.bl {
-      bottom: 8px;
-      left: 8px;
-    }
-
-    .screw.br {
-      bottom: 8px;
-      right: 8px;
-    }
-
-    /* ============ LABELS ============ */
-    .lbl {
-      font-family: var(--mono);
-      font-size: 8px;
-      font-weight: 600;
-      letter-spacing: 2.2px;
-      color: var(--faint);
-      text-transform: uppercase;
+      -moz-osx-font-smoothing: grayscale;
       user-select: none;
     }
 
-    /* ============ FREQUENCY STRIP ============ */
-    .freq-strip {
-      padding: 18px 22px 14px;
-      border-bottom: 1px solid var(--line);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: 12px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 40%),
-        var(--panel);
+    /* ============ AMBIENT BACKGROUND ============ */
+    .ambient {
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(80px);
+      opacity: 0.5;
     }
 
-    .freq-display {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    .freq-value {
-      font-family: var(--mono);
-      font-size: 74px;
-      font-weight: 500;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -3.5px;
-      line-height: 0.9;
-      color: var(--text);
-      text-shadow:
-        0 0 24px rgba(230, 84, 58, 0.12),
-        0 1px 2px rgba(0, 0, 0, 0.6);
-      transition: color 0.35s ease, text-shadow 0.35s ease;
-    }
-
-    .freq-value.tune {
-      color: var(--accent);
-      text-shadow: 0 0 30px rgba(230, 84, 58, 0.5), 0 1px 2px rgba(0, 0, 0, 0.6);
-    }
-
-    .freq-unit {
-      font-family: var(--mono);
-      font-size: 15px;
-      font-weight: 500;
-      letter-spacing: 1.5px;
-      color: var(--dim);
-      padding-bottom: 6px;
-    }
-
-    .indicators {
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-      padding-bottom: 6px;
-    }
-
-    .ind {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      opacity: 0.35;
-      transition: opacity 0.3s;
-    }
-
-    .ind.on {
-      opacity: 1;
-    }
-
-    .ind .lbl {
-      font-size: 7px;
-      letter-spacing: 1.5px;
-    }
-
-    /* signal bars */
-    .bars {
-      display: flex;
-      gap: 2px;
-      align-items: flex-end;
-      height: 13px;
-    }
-
-    .bars i {
-      display: block;
-      width: 2.5px;
-      background: var(--faint);
-      border-radius: 0.5px;
-      transition: background 0.25s, height 0.25s;
-    }
-
-    .bars i:nth-child(1) {
-      height: 4px;
-    }
-
-    .bars i:nth-child(2) {
-      height: 7px;
-    }
-
-    .bars i:nth-child(3) {
-      height: 10px;
-    }
-
-    .bars i:nth-child(4) {
-      height: 13px;
-    }
-
-    .ind.on .bars i {
-      background: var(--accent);
-    }
-
-    .ind.on .bars i:nth-child(4) {
-      background: var(--green);
-    }
-
-    /* stereo dot */
-    .stdot {
-      width: 8px;
-      height: 8px;
+    .ambient::before,
+    .ambient::after {
+      content: '';
+      position: absolute;
       border-radius: 50%;
-      background: var(--faint);
-      transition: background 0.25s, box-shadow 0.25s;
+      animation: drift 60s ease-in-out infinite;
     }
 
-    .ind.on .stdot {
-      background: var(--accent);
-      box-shadow: 0 0 7px rgba(230, 84, 58, 0.6);
+    .ambient::before {
+      width: 55vw;
+      height: 55vw;
+      top: 5%;
+      left: 10%;
+      background: radial-gradient(circle, rgba(230, 84, 58, 0.22), transparent 65%);
+      animation-delay: 0s;
     }
 
-    /* sleep dot */
-    .slpdot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--faint);
-      transition: background 0.25s, box-shadow 0.25s;
+    .ambient::after {
+      width: 60vw;
+      height: 60vw;
+      bottom: 5%;
+      right: 5%;
+      background: radial-gradient(circle, rgba(80, 120, 200, 0.14), transparent 65%);
+      animation-delay: -30s;
     }
 
-    .ind.on .slpdot {
-      background: var(--amber);
-      box-shadow: 0 0 7px rgba(217, 154, 43, 0.6);
-      animation: slp 2.5s ease-in-out infinite;
-    }
-
-    @keyframes slp {
+    @keyframes drift {
 
       0%,
       100% {
-        opacity: 1;
+        transform: translate(0, 0) scale(1);
       }
 
-      50% {
-        opacity: 0.4;
+      33% {
+        transform: translate(8%, -6%) scale(1.08);
+      }
+
+      66% {
+        transform: translate(-6%, 8%) scale(0.95);
       }
     }
 
-    /* ============ STATION STRIP ============ */
-    .station-strip {
-      padding: 12px 22px 14px;
-      border-bottom: 1px solid var(--line);
+    /* subtle grid */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+    }
+
+    /* ============ LAYOUT ============ */
+    .app {
+      position: relative;
+      z-index: 1;
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto auto;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    /* ============ TOP BAR ============ */
+    .top {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-height: 68px;
-      justify-content: center;
-      background: var(--panel);
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 28px 12px;
+      gap: 16px;
+      animation: slide-down 0.6s var(--eo) both;
     }
 
-    .station-name {
-      font-size: 19px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .station-name.swap {
-      animation: swap 0.3s var(--eo);
-    }
-
-    @keyframes swap {
+    @keyframes slide-down {
       from {
         opacity: 0;
-        transform: translateY(3px);
+        transform: translateY(-10px);
       }
 
       to {
@@ -317,525 +142,72 @@
       }
     }
 
-    .station-meta {
-      font-size: 12px;
-      color: var(--dim);
+    .clock {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .clock .time {
       font-family: var(--mono);
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      transition: color 0.3s;
+    }
+
+    .clock .date {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--faint);
+      font-weight: 500;
+    }
+
+    .status {
       display: flex;
       align-items: center;
       gap: 7px;
-      min-height: 16px;
-    }
-
-    .station-meta .sep {
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: var(--faint);
-      flex-shrink: 0;
-    }
-
-    .station-meta .flag {
-      font-size: 12px;
-    }
-
-    /* ============ DIAL ZONE ============ */
-    .dial-zone {
-      padding: 16px 22px 18px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #08080a, #0c0c10);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .dial-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .dial-count {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--faint);
-      letter-spacing: 1.2px;
-    }
-
-    .dial-wrap {
-      position: relative;
-      height: 96px;
-      background: linear-gradient(180deg, #050507 0%, #0a0a0e 100%);
-      border-radius: 5px;
-      border: 1px solid #1a1a20;
-      border-top-color: #050507;
-      overflow: hidden;
-      touch-action: none;
-      user-select: none;
-      cursor: ew-resize;
-      box-shadow:
-        inset 0 3px 14px rgba(0, 0, 0, 0.9),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.03);
-    }
-
-    .dial-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(90deg,
-          rgba(10, 10, 12, 0.95) 0%, transparent 6%,
-          transparent 94%, rgba(10, 10, 12, 0.95) 100%);
-      z-index: 4;
-    }
-
-    /* scanline texture */
-    .dial-wrap::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(0deg,
-          rgba(255, 255, 255, 0.012) 0 1px,
-          transparent 1px 3px);
-      z-index: 1;
-    }
-
-    .dial {
-      overflow: hidden;
-      height: 100%;
-      position: relative;
-    }
-
-    .ticks {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      will-change: transform;
-    }
-
-    .tick {
-      position: absolute;
-      bottom: 0;
-      width: 1px;
-      background: #23232b;
-      transition: background 0.2s;
-    }
-
-    .tick.maj {
-      background: #45454f;
-      width: 2px;
-    }
-
-    .tick-label {
-      position: absolute;
-      top: 8px;
-      transform: translateX(-50%);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--faint);
-      font-variant-numeric: tabular-nums;
-      transition: color 0.2s;
-    }
-
-    .dial-wrap:active .tick.maj {
-      background: #5a5a68;
-    }
-
-    .dial-wrap:active .tick-label {
-      color: var(--dim);
-    }
-
-    .needle {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      margin-left: -1px;
-      background: linear-gradient(180deg, transparent, var(--accent) 12%, var(--accent) 88%, transparent);
-      box-shadow: 0 0 12px rgba(230, 84, 58, 0.55), 0 0 3px var(--accent);
-      z-index: 3;
-    }
-
-    .needle::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: 50%;
-      width: 7px;
-      height: 7px;
-      margin-left: -3.5px;
-      background: var(--accent);
-      transform: rotate(45deg);
-      box-shadow: 0 0 8px rgba(230, 84, 58, 0.7);
-    }
-
-    .station-dot {
-      position: absolute;
-      bottom: 5px;
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: var(--faint);
-      transform: translateX(-50%);
-      opacity: 0.5;
-      z-index: 2;
-      transition: opacity 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
-    }
-
-    .station-dot.near {
-      background: var(--accent);
-      opacity: 1;
-      transform: translateX(-50%) scale(1.6);
-      box-shadow: 0 0 6px rgba(230, 84, 58, 0.7);
-    }
-
-    /* ============ TRANSPORT ============ */
-    .transport-zone {
-      padding: 16px 22px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      background: var(--panel);
-    }
-
-    .btn {
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-top-color: var(--line-2);
-      border-radius: 6px;
-      color: var(--dim);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.12s, border-color 0.12s, transform 0.08s;
-      user-select: none;
-      position: relative;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.4);
-    }
-
-    .btn:hover {
-      background: var(--panel-3);
-      border-color: var(--line-2);
-      color: var(--text);
-    }
-
-    .btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-    }
-
-    .btn svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .btn.icon {
-      width: 42px;
-      height: 42px;
-    }
-
-    .btn.play {
-      width: 54px;
-      height: 54px;
-      border-radius: 8px;
-      background: linear-gradient(180deg, #e6543a, #c9432b);
-      border-color: var(--accent-dk);
-      border-top-color: #f0664d;
-      color: #fff;
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.2) inset,
-        0 2px 10px rgba(230, 84, 58, 0.35),
-        0 1px 2px rgba(0, 0, 0, 0.5);
-    }
-
-    .btn.play:hover {
-      background: linear-gradient(180deg, #ef5e44, #d04a30);
-      color: #fff;
-    }
-
-    .btn.play svg {
-      width: 20px;
-      height: 20px;
-      fill: #fff;
-      stroke: none;
-    }
-
-    /* ============ CONTROL STRIP (vol + region) ============ */
-    .ctrl-strip {
-      padding: 14px 22px;
-      border-bottom: 1px solid var(--line);
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 18px;
-      align-items: center;
-      background: var(--panel);
-    }
-
-    @media (max-width: 520px) {
-      .ctrl-strip {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-    }
-
-    .ctrl-col {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 0;
-    }
-
-    .ctrl-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .vol-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .vol-row svg {
-      width: 14px;
-      height: 14px;
-      stroke: var(--dim);
-      fill: none;
-      stroke-width: 2;
-      flex-shrink: 0;
-      transition: stroke 0.2s;
-    }
-
-    input[type="range"] {
-      flex: 1;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 3px;
-      border-radius: 2px;
-      background: var(--line);
-      outline: none;
-      cursor: pointer;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-      background: var(--text);
-      box-shadow: 0 0 0 2px var(--panel), 0 1px 3px rgba(0, 0, 0, 0.6);
-      transition: background 0.15s, transform 0.15s var(--eo);
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover {
-      background: var(--accent);
-      transform: scale(1.15);
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-      background: var(--text);
-      border: none;
-    }
-
-    .vol-val {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--dim);
-      min-width: 30px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .sel-wrap {
-      position: relative;
-    }
-
-    .sel-wrap svg {
-      position: absolute;
-      right: 9px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 11px;
-      height: 11px;
-      stroke: var(--faint);
-      fill: none;
-      stroke-width: 2.2;
-      pointer-events: none;
-    }
-
-    select {
-      width: 100%;
-      -webkit-appearance: none;
-      appearance: none;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 8px 26px 8px 10px;
-      font-size: 12px;
-      font-family: var(--mono);
-      color: var(--text);
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      text-overflow: ellipsis;
-    }
-
-    select:hover {
-      background: var(--panel-3);
-      border-color: var(--line-2);
-    }
-
-    select:focus {
-      border-color: var(--accent-dk);
-    }
-
-    select option {
-      background: var(--panel-3);
-      color: var(--text);
-    }
-
-    /* ============ UTILITY STRIP ============ */
-    .util-strip {
-      padding: 12px 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: var(--panel);
-      flex-wrap: wrap;
-    }
-
-    .utility-row {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .btn-sm {
-      background: transparent;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--dim);
       font-family: var(--mono);
       font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.4px;
-      padding: 7px 11px;
-      cursor: pointer;
-      transition: all 0.15s var(--eo);
-      user-select: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
+      color: var(--dim);
+      padding: 6px 12px;
+      border-radius: 100px;
+      border: 1px solid var(--line);
+      background: rgba(18, 18, 22, 0.6);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s var(--eo);
     }
 
-    .btn-sm svg {
-      width: 11px;
-      height: 11px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .btn-sm:hover {
-      background: var(--panel-2);
-      border-color: var(--line-2);
-      color: var(--text);
-    }
-
-    .btn-sm:active {
-      transform: translateY(1px);
-    }
-
-    .btn-sm.active {
-      border-color: var(--accent-dk);
-      color: var(--accent);
-      background: rgba(230, 84, 58, 0.07);
-    }
-
-    .btn-sm.active svg {
-      animation: spin 2.5s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* status area */
-    .status-area {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 1.2px;
-      color: var(--faint);
-      min-width: 0;
-      flex: 1 1 100%;
-      justify-content: flex-end;
-      text-transform: uppercase;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    @media (min-width: 480px) {
-      .status-area {
-        flex: 0 1 auto;
-      }
-    }
-
-    .status-area .sd {
+    .status .dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: var(--faint);
-      flex-shrink: 0;
       transition: background 0.3s, box-shadow 0.3s;
     }
 
-    .status-area.live .sd {
+    .status.on .dot {
       background: var(--green);
-      box-shadow: 0 0 7px rgba(74, 157, 104, 0.7);
+      box-shadow: 0 0 8px rgba(74, 157, 104, 0.7);
       animation: pulse 2s ease-in-out infinite;
     }
 
-    .status-area.warn .sd {
+    .status.demo .dot {
       background: var(--amber);
-      box-shadow: 0 0 7px rgba(217, 154, 43, 0.6);
+      box-shadow: 0 0 8px rgba(217, 154, 43, 0.6);
     }
 
-    .status-area.err {
+    .status.err {
       color: var(--accent);
     }
 
-    .status-area.err .sd {
+    .status.err .dot {
       background: var(--accent);
-      box-shadow: 0 0 7px rgba(230, 84, 58, 0.6);
     }
 
     @keyframes pulse {
@@ -850,24 +222,199 @@
       }
     }
 
-    #statusText {
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(18, 18, 22, 0.6);
+      border: 1px solid var(--line);
+      color: var(--dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s var(--eo);
+    }
+
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.25s var(--eo);
+    }
+
+    .icon-btn:hover {
+      color: var(--text);
+      border-color: var(--line-2);
+      background: var(--surface);
+    }
+
+    .icon-btn:hover svg {
+      transform: scale(1.1);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* ============ CENTER (FREQUENCY + STATION) ============ */
+    .center {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 24px;
+      gap: 24px;
+      min-height: 0;
+    }
+
+    .freq-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .freq {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      position: relative;
+    }
+
+    .freq-value {
+      font-family: var(--mono);
+      font-size: clamp(72px, 15vw, 180px);
+      font-weight: 300;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.05em;
+      line-height: 0.85;
+      color: var(--text);
+      transition: color 0.5s var(--eo), text-shadow 0.5s var(--eo);
+      display: inline-block;
+    }
+
+    .freq-value.tuning {
+      color: var(--accent);
+      text-shadow: 0 0 60px rgba(230, 84, 58, 0.4);
+    }
+
+    /* digit roll */
+    .digit-col {
+      display: inline-block;
+      height: 1em;
+      overflow: hidden;
+      vertical-align: baseline;
+      position: relative;
+      width: 0.62em;
+    }
+
+    .digit-col .digit-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.5s var(--eo);
+      will-change: transform;
+    }
+
+    .digit-col .digit-track span {
+      display: block;
+      height: 1em;
+      line-height: 0.85;
+      text-align: center;
+    }
+
+    .freq-unit {
+      font-family: var(--mono);
+      font-size: clamp(14px, 2vw, 22px);
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+    }
+
+    .station-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      max-width: 720px;
+      text-align: center;
+      min-height: 68px;
+      justify-content: center;
+    }
+
+    .station-name {
+      font-size: clamp(20px, 3.4vw, 34px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
+      transition: opacity 0.35s var(--eo), transform 0.35s var(--eo);
     }
 
-    /* ============ FAV SHEET ============ */
-    .fav-sheet {
-      border-top: 1px solid var(--line);
-      background: var(--panel-2);
-      max-height: 260px;
-      overflow-y: auto;
-      animation: sheet-down 0.25s var(--eo);
+    .station-name.swap {
+      animation: name-swap 0.5s var(--eo);
     }
 
-    @keyframes sheet-down {
+    @keyframes name-swap {
+      0% {
+        opacity: 0;
+        transform: translateY(8px);
+        filter: blur(4px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .station-meta {
+      font-family: var(--mono);
+      font-size: clamp(11px, 1.1vw, 13px);
+      letter-spacing: 1px;
+      color: var(--dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .station-meta .sep {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--faint);
+      flex-shrink: 0;
+    }
+
+    /* ============ DIAL ============ */
+    .dial-section {
+      padding: 0 0 4px;
+      animation: fade-up 0.7s var(--eo) 0.15s both;
+    }
+
+    @keyframes fade-up {
       from {
         opacity: 0;
-        transform: translateY(-6px);
+        transform: translateY(10px);
       }
 
       to {
@@ -876,45 +423,631 @@
       }
     }
 
-    .fav-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 22px 8px;
+    .dial-wrap {
+      position: relative;
+      height: 88px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.15));
+      border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      touch-action: none;
+      cursor: ew-resize;
+      transition: border-color 0.3s;
     }
 
-    .fav-header .lbl {
+    .dial-wrap:hover {
+      border-color: var(--line-2);
+    }
+
+    .dial-wrap:active {
+      border-color: var(--accent);
+    }
+
+    .dial-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg,
+          var(--bg) 0%, transparent 5%,
+          transparent 95%, var(--bg) 100%);
+      z-index: 4;
+    }
+
+    .dial {
+      overflow: hidden;
+      height: 100%;
+      position: relative;
+    }
+
+    .ticks {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      will-change: transform;
+      transition: none;
+    }
+
+    .tick {
+      position: absolute;
+      bottom: 0;
+      width: 1px;
+      background: #1e1e24;
+      transition: background 0.2s;
+    }
+
+    .tick.maj {
+      background: #35353d;
+      width: 2px;
+    }
+
+    .dial-wrap:hover .tick.maj {
+      background: #45454e;
+    }
+
+    .dial-wrap:active .tick.maj {
+      background: var(--accent);
+    }
+
+    .tick-label {
+      position: absolute;
+      top: 10px;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--faint);
+      font-variant-numeric: tabular-nums;
+      transition: color 0.2s;
+    }
+
+    .dial-wrap:hover .tick-label {
       color: var(--dim);
     }
 
-    .fav-close {
-      background: none;
-      border: none;
-      color: var(--faint);
-      cursor: pointer;
-      font-size: 14px;
-      padding: 2px 6px;
-      line-height: 1;
-      transition: color 0.15s;
+    .needle {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      margin-left: -1px;
+      background: var(--accent);
+      box-shadow: 0 0 20px rgba(230, 84, 58, 0.6), 0 0 4px var(--accent);
+      z-index: 3;
+      transition: box-shadow 0.3s;
     }
 
-    .fav-close:hover {
+    .needle::before,
+    .needle::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      margin-left: -4px;
+      background: var(--accent);
+      transform: rotate(45deg);
+      box-shadow: 0 0 10px rgba(230, 84, 58, 0.6);
+    }
+
+    .needle::before {
+      top: -4px;
+    }
+
+    .needle::after {
+      bottom: -4px;
+    }
+
+    .station-dot {
+      position: absolute;
+      bottom: 8px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--faint);
+      transform: translateX(-50%);
+      opacity: 0.4;
+      z-index: 2;
+      transition: opacity 0.3s, background 0.3s, transform 0.3s var(--eo), box-shadow 0.3s;
+    }
+
+    .station-dot.near {
+      background: var(--accent);
+      opacity: 1;
+      transform: translateX(-50%) scale(2);
+      box-shadow: 0 0 8px rgba(230, 84, 58, 0.8);
+    }
+
+    /* ============ TRANSPORT ============ */
+    .transport {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      padding: 30px 24px 22px;
+      animation: fade-up 0.7s var(--eo) 0.25s both;
+    }
+
+    .tbtn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--eo);
+    }
+
+    .tbtn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      transition: transform 0.2s var(--eo);
+    }
+
+    .tbtn:hover {
+      color: var(--text);
+      border-color: var(--line-2);
+      background: var(--surface);
+      transform: scale(1.05);
+    }
+
+    .tbtn:hover svg {
+      transform: scale(1.1);
+    }
+
+    .tbtn:active {
+      transform: scale(0.92);
+    }
+
+    .play-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow:
+        0 0 0 0 rgba(230, 84, 58, 0.5),
+        0 10px 30px rgba(230, 84, 58, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s var(--eo);
+    }
+
+    .play-btn::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.4s var(--eo);
+    }
+
+    .play-btn:hover {
+      transform: scale(1.06);
+      box-shadow:
+        0 0 0 8px rgba(230, 84, 58, 0.12),
+        0 12px 36px rgba(230, 84, 58, 0.4),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .play-btn:hover::before {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+
+    .play-btn:active {
+      transform: scale(0.95);
+    }
+
+    .play-btn svg {
+      width: 30px;
+      height: 30px;
+      fill: #fff;
+      transition: transform 0.2s var(--eo);
+    }
+
+    .play-btn.playing svg {
+      animation: gentle-pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes gentle-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(0.92);
+      }
+    }
+
+    /* sleep ring on play button */
+    .play-btn .sleep-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid var(--amber);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .play-btn.sleeping .sleep-ring {
+      opacity: 1;
+      animation: ring-fade 3s linear infinite;
+    }
+
+    @keyframes ring-fade {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.08);
+        opacity: 0.4;
+      }
+    }
+
+    /* ============ BOTTOM BAR ============ */
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px 22px;
+      gap: 16px;
+      border-top: 1px solid var(--line);
+      background: rgba(10, 10, 12, 0.6);
+      backdrop-filter: blur(12px);
+      animation: slide-up 0.6s var(--eo) 0.35s both;
+      flex-wrap: wrap;
+    }
+
+    @keyframes slide-up {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .util-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .ubtn {
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      transition: all 0.2s var(--eo);
+      white-space: nowrap;
+    }
+
+    .ubtn svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s var(--eo);
+    }
+
+    .ubtn:hover {
+      color: var(--text);
+      border-color: var(--line-2);
+      background: var(--surface);
+      transform: translateY(-1px);
+    }
+
+    .ubtn:hover svg {
+      transform: scale(1.1);
+    }
+
+    .ubtn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .ubtn.active {
       color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(230, 84, 58, 0.08);
+    }
+
+    .ubtn.active svg {
+      animation: spin-slow 2.5s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .ubtn.icon-only {
+      width: 38px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .right-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+
+    .region-wrap {
+      position: relative;
+    }
+
+    .region-wrap svg {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 11px;
+      height: 11px;
+      stroke: var(--faint);
+      fill: none;
+      stroke-width: 2.2;
+      pointer-events: none;
+      transition: transform 0.25s var(--eo);
+    }
+
+    .region-wrap:hover svg {
+      transform: translateY(-50%) translateY(2px);
+    }
+
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 30px 10px 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+      max-width: 220px;
+      text-overflow: ellipsis;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    select:hover {
+      border-color: var(--line-2);
+      background: var(--surface);
+    }
+
+    select:focus {
+      border-color: var(--accent);
+    }
+
+    select option {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .vol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .vol-wrap:hover {
+      border-color: var(--line-2);
+      background: var(--surface);
+    }
+
+    .vol-wrap svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--dim);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--line);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--text);
+      box-shadow: 0 0 0 2px var(--bg), 0 1px 3px rgba(0, 0, 0, 0.6);
+      transition: background 0.15s, transform 0.15s var(--eo);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: var(--accent);
+      transform: scale(1.2);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--text);
+      border: none;
+    }
+
+    /* ============ FAVORITES SHEET ============ */
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--eo);
+    }
+
+    .sheet-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 70vh;
+      background: var(--surface);
+      border-top: 1px solid var(--line-2);
+      border-radius: 20px 20px 0 0;
+      z-index: 50;
+      transform: translateY(100%);
+      transition: transform 0.4s var(--eo);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .sheet.open {
+      transform: translateY(0);
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sheet-header .title {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sheet-header .title svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--eo);
+    }
+
+    .close-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+    }
+
+    .close-btn:hover {
+      color: var(--text);
+      border-color: var(--line-2);
+      transform: rotate(90deg);
+    }
+
+    .fav-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 16px 24px;
     }
 
     .fav-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 9px 22px;
+      padding: 14px 16px;
+      border-radius: 12px;
       cursor: pointer;
-      border-bottom: 1px solid var(--line);
-      transition: background 0.12s;
+      transition: background 0.2s var(--eo);
+      border: 1px solid transparent;
+      margin-bottom: 4px;
     }
 
     .fav-item:hover {
-      background: var(--panel-3);
+      background: var(--surface-2);
+      border-color: var(--line);
     }
 
     .fav-item .info {
@@ -923,7 +1056,7 @@
     }
 
     .fav-item .name {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       color: var(--text);
       white-space: nowrap;
@@ -934,12 +1067,13 @@
     .fav-item .detail {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--faint);
-      margin-top: 2px;
+      color: var(--dim);
+      margin-top: 3px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      letter-spacing: 0.4px;
     }
 
     .fav-item .remove {
@@ -947,92 +1081,211 @@
       border: none;
       color: var(--faint);
       cursor: pointer;
-      padding: 4px;
+      padding: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: color 0.15s;
+      border-radius: 6px;
+      transition: all 0.2s;
     }
 
     .fav-item .remove svg {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       stroke: currentColor;
       fill: none;
-      stroke-width: 2.5;
+      stroke-width: 2;
     }
 
     .fav-item .remove:hover {
       color: var(--accent);
+      background: rgba(230, 84, 58, 0.1);
     }
 
     .empty-msg {
-      padding: 24px 22px;
+      text-align: center;
+      padding: 40px 20px;
       color: var(--faint);
       font-family: var(--mono);
       font-size: 11px;
-      text-align: center;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
 
-    /* ============ DATA ROW (collapsed) ============ */
-    .data-row {
-      padding: 8px 22px 12px;
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      background: var(--panel);
-      border-top: 1px solid var(--line);
+    /* ============ TOAST ============ */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(18, 18, 22, 0.95);
+      border: 1px solid var(--line-2);
+      border-radius: 100px;
+      padding: 10px 18px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+      transition: all 0.4s var(--eo);
+      white-space: nowrap;
     }
 
-    .data-row svg {
-      width: 12px;
-      height: 12px;
-      stroke: var(--faint);
-      fill: none;
-      stroke-width: 2;
-      flex-shrink: 0;
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
-    .data-row input {
-      flex: 1;
-      min-width: 0;
-      background: transparent;
-      border: none;
-      outline: none;
+    /* ============ KEYBOARD HINTS ============ */
+    .kb-hints {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      background: rgba(18, 18, 22, 0.9);
+      border: 1px solid var(--line-2);
+      border-radius: 12px;
+      padding: 14px 16px;
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--faint);
-      padding: 4px 0;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.6px;
+      color: var(--dim);
+      z-index: 60;
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: all 0.35s var(--eo);
+      pointer-events: none;
+      line-height: 2;
     }
 
-    .data-row input::placeholder {
-      color: #38383f;
+    .kb-hints.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .data-row button {
-      background: transparent;
+    .kb-hints kbd {
+      display: inline-block;
+      background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 3px;
-      color: var(--faint);
+      border-radius: 4px;
+      padding: 1px 6px;
       font-family: var(--mono);
       font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      padding: 5px 8px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.15s;
-    }
-
-    .data-row button:hover {
       color: var(--text);
-      border-color: var(--line-2);
+      margin-right: 4px;
+      min-width: 20px;
+      text-align: center;
     }
 
-    .hidden {
-      display: none !important;
+    .kb-hints .h {
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: block;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 9px;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 640px) {
+      .top {
+        padding: 16px 18px 8px;
+      }
+
+      .clock .time {
+        font-size: 13px;
+      }
+
+      .clock .date {
+        font-size: 9px;
+      }
+
+      .bottom {
+        padding: 12px 16px 18px;
+        gap: 10px;
+      }
+
+      .ubtn {
+        padding: 0 10px;
+        font-size: 9px;
+      }
+
+      .ubtn span:not(.lbl-hidden) {
+        display: none;
+      }
+
+      .ubtn.icon-only {
+        width: 38px;
+        padding: 0;
+      }
+
+      .transport {
+        gap: 22px;
+        padding: 22px 16px 18px;
+      }
+
+      .play-btn {
+        width: 72px;
+        height: 72px;
+      }
+
+      .play-btn svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .tbtn {
+        width: 46px;
+        height: 46px;
+      }
+
+      .vol-wrap {
+        padding: 0 10px;
+      }
+
+      input[type="range"] {
+        width: 70px;
+      }
+
+      select {
+        padding: 8px 26px 8px 10px;
+        font-size: 10px;
+        max-width: 140px;
+      }
+
+      .station-info {
+        min-height: 56px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .right-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .region-wrap {
+        flex: 1;
+      }
+
+      select {
+        max-width: none;
+        width: 100%;
+      }
+
+      .vol-wrap {
+        flex: 1;
+      }
+
+      input[type="range"] {
+        width: 100%;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1045,217 +1298,49 @@
         transition-duration: 0.01ms !important;
       }
     }
-
-    @media (max-width: 520px) {
-      .freq-strip {
-        padding: 14px 16px 10px;
-      }
-
-      .freq-value {
-        font-size: 56px;
-        letter-spacing: -2.5px;
-      }
-
-      .freq-unit {
-        font-size: 12px;
-        padding-bottom: 4px;
-      }
-
-      .station-strip {
-        padding: 10px 16px 12px;
-      }
-
-      .station-name {
-        font-size: 16px;
-      }
-
-      .dial-zone {
-        padding: 12px 16px 14px;
-      }
-
-      .dial-wrap {
-        height: 84px;
-      }
-
-      .transport-zone {
-        padding: 12px 16px;
-        gap: 10px;
-      }
-
-      .btn.icon {
-        width: 38px;
-        height: 38px;
-      }
-
-      .btn.play {
-        width: 48px;
-        height: 48px;
-      }
-
-      .ctrl-strip {
-        padding: 12px 16px;
-      }
-
-      .util-strip {
-        padding: 10px 16px;
-      }
-
-      .data-row {
-        padding: 6px 16px 10px;
-      }
-    }
-
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--line);
-      border-radius: 2px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--line-2);
-    }
-
-    /* ============ EDITOR ============ */
-    .editor-overlay {
-      position: fixed;
-      top: 18px;
-      left: 18px;
-      width: 700px;
-      height: 500px;
-      max-width: calc(100vw - 36px);
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      z-index: 1000;
-      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
-      overflow: hidden;
-    }
-
-    .editor-header {
-      display: flex;
-      gap: 6px;
-      padding: 8px 10px;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line);
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .editor-header button {
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--dim);
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 5px 10px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .editor-header button:hover {
-      background: var(--panel-3);
-      color: var(--text);
-    }
-
-    .editor-header .drag-handle {
-      cursor: grab;
-    }
-
-    .editor-tabs {
-      display: flex;
-      gap: 3px;
-      overflow-x: auto;
-    }
-
-    .editor-tabs button.active {
-      color: var(--accent);
-      border-color: var(--accent-dk);
-    }
-
-    .editor-body {
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .editor-body textarea {
-      width: 100%;
-      height: 100%;
-      background: #050507;
-      color: #c8c8d4;
-      border: none;
-      padding: 12px;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.6;
-      resize: none;
-      outline: none;
-      tab-size: 2;
-      white-space: pre;
-    }
   </style>
 </head>
 
 <body>
 
-  <div class="radio" id="radioUI">
-    <span class="screw tl"></span>
-    <span class="screw tr"></span>
-    <span class="screw bl"></span>
-    <span class="screw br"></span>
+  <div class="ambient"></div>
+  <div class="grid-bg"></div>
 
-    <!-- ── FREQUENCY ─────────────────────────── -->
-    <div class="freq-strip">
-      <div>
-        <div class="lbl" style="margin-bottom:5px;">Band&nbsp;/&nbsp;MHz</div>
-        <div class="freq-display">
+  <div class="app">
+
+    <!-- TOP -->
+    <header class="top">
+      <div class="clock">
+        <span class="time" id="clockTime">--:--</span>
+        <span class="date" id="clockDate">—</span>
+      </div>
+      <div class="status" id="statusPill">
+        <span class="dot"></span>
+        <span id="statusText">standby</span>
+      </div>
+      <button class="icon-btn" id="fullscreenBtn" title="Fullscreen">
+      <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    </button>
+    </header>
+
+    <!-- CENTER -->
+    <main class="center">
+      <div class="freq-wrap" id="freqWrap" title="Double-click for a random station">
+        <div class="freq">
           <span class="freq-value" id="freqDisplay">98.8</span>
           <span class="freq-unit">MHz</span>
         </div>
       </div>
-      <div class="indicators">
-        <div class="ind" id="indSignal" title="Signal">
-          <span class="bars"><i></i><i></i><i></i><i></i></span>
-          <span class="lbl">Sig</span>
-        </div>
-        <div class="ind" id="indStereo" title="Stereo">
-          <span class="stdot"></span>
-          <span class="lbl">St</span>
-        </div>
-        <div class="ind" id="indSleep" title="Sleep timer">
-          <span class="slpdot"></span>
-          <span class="lbl">Slp</span>
+      <div class="station-info">
+        <div class="station-name" id="stationDisplay">—</div>
+        <div class="station-meta" id="stationMeta">
+          <span id="metaText">initializing</span>
         </div>
       </div>
-    </div>
+    </main>
 
-    <!-- ── STATION ───────────────────────────── -->
-    <div class="station-strip">
-      <div class="station-name" id="stationDisplay">—</div>
-      <div class="station-meta">
-        <span id="metaFlag" class="flag"></span>
-        <span id="metaText">initializing</span>
-      </div>
-    </div>
-
-    <!-- ── DIAL ──────────────────────────────── -->
-    <div class="dial-zone">
-      <div class="dial-head">
-        <span class="lbl">Tuning</span>
-        <span class="dial-count" id="dialCount">— stations</span>
-      </div>
+    <!-- DIAL -->
+    <div class="dial-section">
       <div class="dial-wrap" id="dialWrap">
         <div class="dial" id="dialEl">
           <div class="ticks" id="ticksEl"></div>
@@ -1264,113 +1349,96 @@
       </div>
     </div>
 
-    <!-- ── TRANSPORT ─────────────────────────── -->
-    <div class="transport-zone">
-      <button class="btn icon" id="prevBtn" title="Previous station" aria-label="Previous">
-      <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20" fill="currentColor" stroke="none"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+    <!-- TRANSPORT -->
+    <div class="transport">
+      <button class="tbtn" id="prevBtn" title="Previous (←)">
+      <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><rect x="4" y="5" width="2.5" height="14"/></svg>
     </button>
-      <button class="btn play" id="playBtn" title="Play / pause" aria-label="Play">
-      <svg viewBox="0 0 24 24" id="playIcon"><polygon points="6 3 20 12 6 21 6 3" fill="currentColor"/></svg>
+      <button class="play-btn" id="playBtn" title="Play / Pause (Space)">
+      <span class="sleep-ring"></span>
+      <svg viewBox="0 0 24 24" id="playIcon"><polygon points="6 3 20 12 6 21 6 3"/></svg>
     </button>
-      <button class="btn icon" id="nextBtn" title="Next station" aria-label="Next">
-      <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4" fill="currentColor" stroke="none"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      <button class="tbtn" id="nextBtn" title="Next (→)">
+      <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><rect x="17.5" y="5" width="2.5" height="14"/></svg>
     </button>
     </div>
 
-    <!-- ── VOL + REGION ──────────────────────── -->
-    <div class="ctrl-strip">
-      <div class="ctrl-col">
-        <div class="ctrl-head">
-          <span class="lbl">Output</span>
-        </div>
-        <div class="vol-row">
-          <svg viewBox="0 0 24 24">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-          </svg>
-          <input type="range" id="volSlider" min="0" max="100" value="80" aria-label="Volume">
-          <span class="vol-val" id="volPct">80%</span>
-        </div>
+    <!-- BOTTOM -->
+    <footer class="bottom">
+      <div class="util-group">
+        <button class="ubtn" id="scanBtn" title="Scan (S)">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Scan</span>
+      </button>
+        <button class="ubtn" id="sleepBtn" title="Sleep timer (T)">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span id="sleepLabel">Sleep</span>
+      </button>
+        <button class="ubtn" id="favBtn" title="Favorites (F)">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Favs</span>
+      </button>
+        <button class="ubtn icon-only" id="shareBtn" title="Share (C)">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
       </div>
-      <div class="ctrl-col">
-        <div class="ctrl-head">
-          <span class="lbl">Region</span>
-          <span class="lbl" id="stationCount" style="letter-spacing:1.2px;"></span>
-        </div>
-        <div class="sel-wrap">
-          <select id="countrySel" aria-label="Region"><option value="">loading</option></select>
+
+      <div class="right-group">
+        <div class="region-wrap">
+          <select id="countrySel" title="Region"><option value="">loading</option></select>
           <svg viewBox="0 0 24 24">
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </div>
+        <div class="vol-wrap">
+          <svg viewBox="0 0 24 24">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+          <input type="range" id="volSlider" min="0" max="100" value="80" aria-label="Volume">
+        </div>
       </div>
-    </div>
+    </footer>
+  </div>
 
-    <!-- ── UTILITY + STATUS ──────────────────── -->
-    <div class="util-strip">
-      <div class="utility-row">
-        <button class="btn-sm" id="scanBtn" title="Scan band">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Scan
-      </button>
-        <button class="btn-sm" id="sleepBtn" title="Sleep timer">
-        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        Sleep
-      </button>
-        <button class="btn-sm" id="favBtn" title="Favorites">
-        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        Favs
-      </button>
-        <button class="btn-sm" id="shareBtn" title="Share">
-        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Share
-      </button>
-      </div>
-      <div class="status-area" id="statusArea">
-        <span class="sd"></span>
-        <span id="statusText">standby</span>
-      </div>
+  <!-- FAVORITES SHEET -->
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet" id="favSheet">
+    <div class="sheet-header">
+      <span class="title">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Saved · <span id="favCount">0</span>
+      </span>
+      <button class="close-btn" id="favClose">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
     </div>
+    <div class="fav-list" id="favList"></div>
+  </div>
 
-    <!-- ── FAVORITES SHEET ───────────────────── -->
-    <div class="fav-sheet hidden" id="favSheet">
-      <div class="fav-header">
-        <span class="lbl">Saved / <span id="favCount">0</span></span>
-        <button class="fav-close" id="favClose" aria-label="Close">✕</button>
-      </div>
-      <div id="favList"></div>
-    </div>
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
 
-    <!-- ── DATA SOURCE ───────────────────────── -->
-    <div class="data-row">
-      <svg viewBox="0 0 24 24">
-        <ellipse cx="12" cy="5" rx="9" ry="3" />
-        <path d="M3 5v14a9 3 0 0 0 18 0V5" />
-        <path d="M3 12a9 3 0 0 0 18 0" />
-      </svg>
-      <input type="text" id="dataUrlInput" placeholder="source url · leave blank to auto" spellcheck="false" autocomplete="off">
-      <button id="loadDataBtn">Load</button>
-      <button id="resetDataBtn">Reset</button>
-    </div>
-
-    <!-- engine-compat hidden elements -->
-    <div style="display:none;" aria-hidden="true">
-      <span id="tagEl"></span><span id="loadEl"></span><span id="stereoTag"></span>
-      <span id="pwrLed"></span><span id="vuNeedle"></span><img id="logoImg" alt="">
-      <button id="lcdFav"></button><span id="tunedMarkerEl"></span>
-    </div>
+  <!-- KEYBOARD HINTS -->
+  <div class="kb-hints" id="kbHints">
+    <span class="h">Shortcuts</span>
+    <kbd>Space</kbd> play / pause<br>
+    <kbd>← →</kbd> prev / next<br>
+    <kbd>↑ ↓</kbd> volume<br>
+    <kbd>S</kbd> scan<br>
+    <kbd>F</kbd> favorite<br>
+    <kbd>T</kbd> sleep<br>
+    <kbd>C</kbd> share
   </div>
 
   <audio id="audioEl" preload="none"></audio>
-  <div id="editorOverlay" class="editor-overlay hidden"></div>
 
   <script>
     (function(){
   "use strict";
 
   // ============================================================
-  // CONSTANTS
+  // CONFIG
   // ============================================================
   const RB_MIRRORS = [
     "https://de1.api.radio-browser.info",
@@ -1380,9 +1448,9 @@
   ];
   const PERCHANCE_BASE = "https://perchance.org/7uttf51lxd/src/data";
   const LOCAL_BASE = "src/data";
-  const CACHE_KEY = "rb_cache_v2";
+  const CACHE_KEY = "rv_cache_v3";
   const CACHE_TTL = 24 * 60 * 60 * 1000;
-  const CACHE_MAX = 4000;
+  const CACHE_MAX = 5000;
 
   const PX = 52, LO = 87.5, HI = 108;
 
@@ -1399,36 +1467,37 @@
   let wantPlaying = false, playGen = 0, failCount = 0;
   let scanTimer = null, sleepTimer = null, sleepMin = 0;
   let lastVol = 0.8;
-  let dataSource = "";
   let tuneDebounce = null;
 
   try { favs = new Set(JSON.parse(localStorage.getItem("rv_favs") || "[]")); } catch(e){}
   try { fmeta = JSON.parse(localStorage.getItem("rv_fmeta") || "{}"); } catch(e){}
 
   const $ = id => document.getElementById(id);
+  const clockTime = $("clockTime"), clockDate = $("clockDate");
+  const statusPill = $("statusPill"), statusText = $("statusText");
+  const fullscreenBtn = $("fullscreenBtn");
   const freqDisplay = $("freqDisplay");
+  const freqWrap = $("freqWrap");
   const stationDisplay = $("stationDisplay");
-  const metaFlag = $("metaFlag");
   const metaText = $("metaText");
+  const stationMeta = $("stationMeta");
   const dialWrap = $("dialWrap"), dialEl = $("dialEl"), ticksEl = $("ticksEl");
-  const dialCount = $("dialCount");
-  const countrySel = $("countrySel"), stationCount = $("stationCount");
+  const countrySel = $("countrySel");
   const playBtn = $("playBtn"), prevBtn = $("prevBtn"), nextBtn = $("nextBtn");
-  const volSlider = $("volSlider"), volPct = $("volPct");
+  const volSlider = $("volSlider");
   const scanBtn = $("scanBtn"), sleepBtn = $("sleepBtn"), favBtn = $("favBtn"), shareBtn = $("shareBtn");
   const favSheet = $("favSheet"), favList = $("favList"), favClose = $("favClose"), favCount = $("favCount");
+  const sheetBackdrop = $("sheetBackdrop");
   const audioEl = $("audioEl");
-  const statusArea = $("statusArea"), statusText = $("statusText");
-  const indSignal = $("indSignal"), indStereo = $("indStereo"), indSleep = $("indSleep");
-  const dataUrlInput = $("dataUrlInput");
-  const loadDataBtn = $("loadDataBtn"), resetDataBtn = $("resetDataBtn");
   const playIcon = $("playIcon");
+  const sleepLabel = $("sleepLabel");
+  const toast = $("toast"), kbHints = $("kbHints");
 
   // ============================================================
   // ICONS
   // ============================================================
-  const ICON_PLAY    = '<polygon points="6 3 20 12 6 21 6 3" fill="currentColor"/>';
-  const ICON_PAUSE   = '<rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/><rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/>';
+  const ICON_PLAY    = '<polygon points="6 3 20 12 6 21 6 3"/>';
+  const ICON_PAUSE   = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
   const ICON_LOADING = '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="14 42" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.9s" repeatCount="indefinite"/></circle>';
 
   function setPlayIcon(name) {
@@ -1438,15 +1507,37 @@
   }
 
   // ============================================================
-  // STATUS
+  // STATUS + TOAST
   // ============================================================
-  function setStatus(msg, kind) {
-    statusText.textContent = msg;
-    statusArea.className = "status-area" + (kind ? " " + kind : "");
+  function setStatus(text, kind) {
+    statusText.textContent = text;
+    statusPill.className = "status" + (kind ? " " + kind : "");
+  }
+  let toastTimer = null;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
   }
 
   // ============================================================
-  // MISC HELPERS
+  // CLOCK
+  // ============================================================
+  function tickClock() {
+    const d = new Date();
+    const h = d.getHours().toString().padStart(2, "0");
+    const m = d.getMinutes().toString().padStart(2, "0");
+    clockTime.textContent = h + ":" + m;
+    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    clockDate.textContent = days[d.getDay()] + ", " + months[d.getMonth()] + " " + d.getDate();
+  }
+  tickClock();
+  setInterval(tickClock, 15000);
+
+  // ============================================================
+  // HELPERS
   // ============================================================
   function buzz() { try { navigator.vibrate && navigator.vibrate(5); } catch(e){} }
 
@@ -1494,26 +1585,40 @@
   function xPos(f) { return (f - LO) * PX; }
 
   // ============================================================
+  // FREQUENCY RENDER (with digit roll)
+  // ============================================================
+  let lastFreqStr = "";
+  function renderFreq(value) {
+    const str = value.toFixed(1);
+    if (str === lastFreqStr) return;
+    lastFreqStr = str;
+    // simple approach: keep as single span with subtle animation
+    freqDisplay.textContent = str;
+  }
+
+  // ============================================================
   // DIAL
   // ============================================================
   function buildTicks() {
     ticksEl.innerHTML = "";
     ticksEl.style.width = xPos(HI) + "px";
+    const frag = document.createDocumentFragment();
     for (let f = LO; f <= HI + 1e-6; f = Math.round((f + 0.1) * 10) / 10) {
       const isMaj = Math.abs(f - Math.round(f)) < 1e-6;
       const t = document.createElement("div");
       t.className = "tick" + (isMaj ? " maj" : "");
       t.style.left = xPos(f) + "px";
-      t.style.height = isMaj ? "30px" : "11px";
-      ticksEl.appendChild(t);
+      t.style.height = isMaj ? "28px" : "10px";
+      frag.appendChild(t);
       if (isMaj && f >= 88 && f <= 108 && Math.round(f) % 2 === 0) {
         const l = document.createElement("div");
         l.className = "tick-label";
         l.style.left = xPos(f) + "px";
         l.textContent = Math.round(f);
-        ticksEl.appendChild(l);
+        frag.appendChild(l);
       }
     }
+    ticksEl.appendChild(frag);
   }
 
   function updateStationDots() {
@@ -1551,15 +1656,15 @@
   // ============================================================
   function paint(animateFreq) {
     if (animateFreq) {
-      freqDisplay.classList.remove("tune");
+      freqDisplay.classList.remove("tuning");
       void freqDisplay.offsetWidth;
-      freqDisplay.classList.add("tune");
+      freqDisplay.classList.add("tuning");
       clearTimeout(tuneDebounce);
-      tuneDebounce = setTimeout(() => freqDisplay.classList.remove("tune"), 220);
+      tuneDebounce = setTimeout(() => freqDisplay.classList.remove("tuning"), 250);
     }
-    freqDisplay.textContent = freq.toFixed(1);
+    renderFreq(freq);
 
-    const w = dialEl.clientWidth || 600;
+    const w = dialEl.clientWidth || window.innerWidth;
     ticksEl.style.transform = "translateX(" + (w / 2 - xPos(freq)) + "px)";
 
     const s = DIAL[dialIdx];
@@ -1570,25 +1675,25 @@
         void stationDisplay.offsetWidth;
         stationDisplay.classList.add("swap");
       }
-      if (metaDisplay.dataset.lock !== "1") {
+      if (stationMeta.dataset.lock !== "1") {
         const parts = [];
-        if (s.l) parts.push(s.l);
-        if (s.t) parts.push(s.t.split(",").slice(0, 2).join(" · "));
-        metaText.textContent = parts.join("  ·  ") || "live stream";
-        metaFlag.textContent = flag(s.cc);
+        if (s.cc) parts.push(flag(s.cc) + " " + (s.l || s.cc));
+        if (s.t) parts.push(s.t.split(",").slice(0, 3).join(" · "));
+        metaText.textContent = parts.filter(Boolean).join("  ·  ") || "live stream";
       }
     } else {
       stationDisplay.textContent = "—";
-      metaText.textContent = DIAL.length ? "rotate the dial to tune" : "no stations in this region";
-      metaFlag.textContent = "";
+      metaText.textContent = DIAL.length ? "rotate the dial" : "no stations";
     }
 
     highlightStationDot();
-    if (!favSheet.classList.contains("hidden")) renderFavs();
   }
 
-  // metaDisplay reference needed for lock
-  const metaDisplay = metaText.parentElement;
+  function setFreq(f, snap, animate) {
+    freq = Math.min(HI, Math.max(LO, f));
+    if (snap && DIAL.length) dialIdx = nearestIdx(freq);
+    paint(animate);
+  }
 
   function tuneTo(i, autoplay) {
     if (!DIAL.length) return;
@@ -1598,12 +1703,6 @@
     freq = s._fm;
     paint(true);
     if (autoplay) playStation(s);
-  }
-
-  function setFreq(f, snap, animate) {
-    freq = Math.min(HI, Math.max(LO, f));
-    if (snap && DIAL.length) dialIdx = nearestIdx(freq);
-    paint(animate);
   }
 
   // ============================================================
@@ -1617,7 +1716,6 @@
   }
 
   async function rb(path, timeoutMs) {
-    // Race mirrors; first to succeed wins
     const attempts = RB_MIRRORS.map(m =>
       fetchT(m + "/json" + path, timeoutMs || 9000).then(r => {
         if (!r.ok) throw new Error("HTTP " + r.status);
@@ -1627,44 +1725,28 @@
     return Promise.any(attempts);
   }
 
-  async function tryPerchance() {
+  async function tryLoadFromBase(base, label) {
     try {
-      const idx = await fetchT(PERCHANCE_BASE + "/index.json", 5000).then(r => {
+      const idx = await fetchT(base + "/index.json", 6000).then(r => {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       });
       if (!idx || !idx.countries) throw new Error("bad index");
       const [top, gj] = await Promise.all([
-        fetchT(PERCHANCE_BASE + "/top.json", 6000).then(r => r.ok ? r.json() : []).catch(() => []),
-        fetchT(PERCHANCE_BASE + "/genres.json", 6000).then(r => r.ok ? r.json() : { genres: [] }).catch(() => ({ genres: [] })),
+        fetchT(base + "/top.json", 8000).then(r => r.ok ? r.json() : []).catch(() => []),
+        fetchT(base + "/genres.json", 8000).then(r => r.ok ? r.json() : { genres: [] }).catch(() => ({ genres: [] })),
       ]);
-      return { source: "perchance", idx, top: Array.isArray(top) ? top : [], genres: gj.genres || [] };
-    } catch(e) { return null; }
-  }
-
-  async function tryLocal() {
-    try {
-      const idx = await fetchT(LOCAL_BASE + "/index.json", 2500).then(r => {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.json();
-      });
-      if (!idx || !idx.countries) throw new Error("bad index");
-      const [top, gj] = await Promise.all([
-        fetchT(LOCAL_BASE + "/top.json", 3000).then(r => r.ok ? r.json() : []).catch(() => []),
-        fetchT(LOCAL_BASE + "/genres.json", 3000).then(r => r.ok ? r.json() : { genres: [] }).catch(() => ({ genres: [] })),
-      ]);
-      return { source: "local", idx, top: Array.isArray(top) ? top : [], genres: gj.genres || [] };
+      return { source: label, idx, top: Array.isArray(top) ? top : [], genres: gj.genres || [] };
     } catch(e) { return null; }
   }
 
   async function fetchFromRadioBrowser() {
-    setStatus("fetching radio-browser…");
+    setStatus("fetching stations");
     try {
-      // Parallel fetch: top voted + top clicked + various tags
       const results = await Promise.allSettled([
-        rb("/stations/topvote/1000?hidebroken=true&is_https=true"),
-        rb("/stations/topclick/1000?hidebroken=true&is_https=true"),
-        rb("/stations/search?limit=500&order=votes&reverse=true&hidebroken=true&is_https=true&has_geo_info=true"),
+        rb("/stations/topvote/1500?hidebroken=true&is_https=true"),
+        rb("/stations/topclick/1500?hidebroken=true&is_https=true"),
+        rb("/stations/search?limit=800&order=votes&reverse=true&hidebroken=true&is_https=true&has_geo_info=true"),
       ]);
       const raw = [];
       for (const r of results) if (r.status === "fulfilled" && Array.isArray(r.value)) raw.push(...r.value);
@@ -1675,7 +1757,6 @@
         let url = (s.url_resolved || s.url || "").trim();
         if (!url || !url.startsWith("https://")) continue;
         const codec = (s.codec || "").toUpperCase();
-        // Prefer stable codecs
         const stable = codec.includes("MP3") || codec.includes("AAC") || codec.includes("MPEG");
         stations.push({
           n: (s.name || "Unknown").trim().replace(/\s+/g, " ").slice(0, 80),
@@ -1714,18 +1795,17 @@
         t: Date.now(),
         stations: stations.slice(0, CACHE_MAX),
       }));
-    } catch(e){ /* quota */ }
+    } catch(e){}
   }
 
   // ============================================================
-  // POPULATE FROM A STATION LIST
+  // POPULATE
   // ============================================================
   function populateFromList(stations, sourceLabel, kind) {
     if (!stations || !stations.length) return false;
     ALL = []; seenUrls = new Set();
     addStations(stations);
 
-    // Build country index
     const byCountry = {};
     for (const s of ALL) {
       const cc = s.cc || "ZZ";
@@ -1736,38 +1816,28 @@
     if (!countries.length) return false;
 
     countrySel.innerHTML = "";
-    // "All regions" option
     const allOpt = document.createElement("option");
     allOpt.value = "__ALL__";
-    allOpt.textContent = `All regions (${ALL.length})`;
+    allOpt.textContent = `All regions · ${ALL.length.toLocaleString()}`;
     countrySel.appendChild(allOpt);
     for (const c of countries) {
       const o = document.createElement("option");
       o.value = c.cc;
-      o.textContent = (flag(c.cc) ? flag(c.cc) + " " : "") + c.c + " (" + c.count + ")";
+      o.textContent = (flag(c.cc) ? flag(c.cc) + " " : "") + c.c + " · " + c.count;
       countrySel.appendChild(o);
     }
-    stationCount.textContent = ALL.length.toLocaleString() + " stations";
-
-    // default to All regions so user sees everything
     countrySel.value = "__ALL__";
     applyPool();
-
-    setStatus(sourceLabel, kind || "live");
+    setStatus(sourceLabel, kind || "on");
     return true;
   }
 
-  // ============================================================
-  // APPLY POOL -> DIAL
-  // ============================================================
   function applyPool() {
     const cc = countrySel.value;
     let pool = cc === "__ALL__" ? ALL.slice() : ALL.filter(s => (s.cc || "ZZ") === cc);
     if (!pool.length) pool = ALL.slice();
 
     pool.sort((a, b) => (b.v || 0) - (a.v || 0));
-
-    // take top 120 for the dial, distribute over the visible band
     DIAL = pool.slice(0, 120);
 
     const n = DIAL.length;
@@ -1775,7 +1845,6 @@
     DIAL.forEach((s, i) => {
       s._fm = n === 1 ? 98.8 : Math.round((lo + (hi - lo) * i / (n - 1)) * 10) / 10;
     });
-    // ensure ascending
     for (let i = 1; i < DIAL.length; i++) {
       if (DIAL[i]._fm <= DIAL[i-1]._fm)
         DIAL[i]._fm = Math.min(108, Math.round((DIAL[i-1]._fm + 0.2) * 10) / 10);
@@ -1783,7 +1852,6 @@
 
     buildTicks();
     updateStationDots();
-    dialCount.textContent = DIAL.length + " on dial";
 
     dialIdx = DIAL.length ? Math.min(DIAL.length - 1, Math.floor(DIAL.length / 2)) : -1;
     current = null;
@@ -1849,9 +1917,7 @@
         hls.loadSource(url);
         hls.attachMedia(audioEl);
         hls.on(Hls.Events.ERROR, (ev, data) => {
-          if (data && data.fatal && g === playGen) {
-            done(false);
-          }
+          if (data && data.fatal && g === playGen) done(false);
         });
       } else {
         audioEl.src = url;
@@ -1877,12 +1943,9 @@
     audioEl.load();
 
     stationDisplay.textContent = s.n;
-    metaFlag.textContent = flag(s.cc);
-    metaDisplay.dataset.lock = "1";
+    stationMeta.dataset.lock = "1";
     metaText.textContent = "connecting";
     setPlayIcon("loading");
-    indStereo.classList.remove("on");
-    indSignal.classList.remove("on");
 
     const needTap = () => {
       if (g !== playGen) return;
@@ -1901,17 +1964,16 @@
     if (g !== playGen) return;
 
     if (!ok && s.u2) {
-      // try alternate URL before skipping
-      metaText.textContent = "trying alternate…";
+      metaText.textContent = "trying alternate";
       const ok2 = await tryPlayUrl(s.u2, g, s.u2.includes(".m3u8"));
       if (g !== playGen) return;
       if (!ok2) {
-        metaText.textContent = "signal lost — seeking";
+        metaText.textContent = "seeking";
         setPlayIcon("play");
         scheduleSkip(g);
       }
     } else if (!ok) {
-      metaText.textContent = "signal lost — seeking";
+      metaText.textContent = "seeking";
       setPlayIcon("play");
       scheduleSkip(g);
     }
@@ -1920,30 +1982,28 @@
   audioEl.addEventListener("playing", () => {
     failCount = 0;
     setPlayIcon("pause");
-    metaDisplay.dataset.lock = "";
-    indStereo.classList.add("on");
-    indSignal.classList.add("on");
-    setStatus("on air", "live");
+    playBtn.classList.add("playing");
+    stationMeta.dataset.lock = "";
+    setStatus("on air", "on");
     if (current) {
       const parts = [];
-      if (current.l) parts.push(current.l);
-      if (current.t) parts.push(current.t.split(",").slice(0, 2).join(" · "));
-      metaText.textContent = parts.join("  ·  ") || "live stream";
+      if (current.cc) parts.push(flag(current.cc) + " " + (current.l || current.cc));
+      if (current.t) parts.push(current.t.split(",").slice(0, 3).join(" · "));
+      metaText.textContent = parts.filter(Boolean).join("  ·  ") || "live stream";
     }
   });
 
   function onStopped() {
     setPlayIcon("play");
-    indStereo.classList.remove("on");
-    indSignal.classList.remove("on");
+    playBtn.classList.remove("playing");
     setStatus("standby", "");
     paint(false);
   }
   audioEl.addEventListener("pause", onStopped);
   audioEl.addEventListener("error", () => {
     if (current && audioEl.src) {
-      metaDisplay.dataset.lock = "1";
-      metaText.textContent = "weak signal";
+      stationMeta.dataset.lock = "1";
+      metaText.textContent = "signal lost";
       scheduleSkip(playGen);
       onStopped();
     }
@@ -1959,7 +2019,7 @@
     if (audioEl.paused) {
       wantPlaying = true;
       audioEl.play().catch(() => {
-        metaDisplay.dataset.lock = "1";
+        stationMeta.dataset.lock = "1";
         metaText.textContent = "tap play to listen";
         setPlayIcon("play");
       });
@@ -1978,15 +2038,16 @@
   function stopScan() {
     if (scanTimer) { clearInterval(scanTimer); scanTimer = null; }
     scanBtn.classList.remove("active");
-    metaDisplay.dataset.lock = "";
+    stationMeta.dataset.lock = "";
   }
   scanBtn.onclick = () => {
     buzz();
-    if (scanTimer) { stopScan(); return; }
+    if (scanTimer) { stopScan(); showToast("scan stopped"); return; }
     if (!DIAL.length) return;
     scanBtn.classList.add("active");
-    metaDisplay.dataset.lock = "1";
-    metaText.textContent = "scanning band";
+    stationMeta.dataset.lock = "1";
+    metaText.textContent = "scanning";
+    showToast("scanning");
     scanTimer = setInterval(() => tuneTo(dialIdx + 1, true), 8000);
   };
 
@@ -2001,21 +2062,23 @@
     if (sleepTimer) { clearTimeout(sleepTimer); sleepTimer = null; }
     if (!sleepMin) {
       sleepBtn.classList.remove("active");
-      sleepBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Sleep';
-      indSleep.classList.remove("on");
+      playBtn.classList.remove("sleeping");
+      sleepLabel.textContent = "Sleep";
+      showToast("sleep off");
     } else {
       sleepBtn.classList.add("active");
-      sleepBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>' + sleepMin + 'm';
-      indSleep.classList.add("on");
+      playBtn.classList.add("sleeping");
+      sleepLabel.textContent = sleepMin + "m";
+      showToast(sleepMin + " minute timer");
       sleepTimer = setTimeout(() => {
         wantPlaying = false;
         stopScan();
         try { audioEl.pause(); } catch(e){}
         sleepMin = 0;
         sleepBtn.classList.remove("active");
-        sleepBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Sleep';
-        indSleep.classList.remove("on");
-        metaDisplay.dataset.lock = "1";
+        playBtn.classList.remove("sleeping");
+        sleepLabel.textContent = "Sleep";
+        stationMeta.dataset.lock = "1";
         metaText.textContent = "sleep timer off";
       }, sleepMin * 60000);
     }
@@ -2033,9 +2096,7 @@
       if (navigator.share) { await navigator.share({ title: s.n, text: s.n + " · live radio", url: s.u }); return; }
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(txt);
-        metaDisplay.dataset.lock = "1";
-        metaText.textContent = "link copied";
-        setTimeout(() => { if (metaDisplay.dataset.lock === "1") { metaDisplay.dataset.lock = ""; paint(false); } }, 2000);
+        showToast("link copied");
         return;
       }
       throw 0;
@@ -2045,12 +2106,8 @@
         ta.value = txt; ta.style.cssText = "position:fixed;opacity:0";
         document.body.appendChild(ta); ta.select();
         document.execCommand("copy"); ta.remove();
-        metaDisplay.dataset.lock = "1";
-        metaText.textContent = "link copied";
-      } catch(e2) {
-        metaDisplay.dataset.lock = "1";
-        metaText.textContent = "copy failed";
-      }
+        showToast("link copied");
+      } catch(e2) { showToast("copy failed"); }
     }
   };
 
@@ -2058,8 +2115,8 @@
   // FAVORITES
   // ============================================================
   function toggleFav(s) {
-    if (favs.has(s.u)) { favs.delete(s.u); delete fmeta[s.u]; }
-    else { favs.add(s.u); fmeta[s.u] = s; }
+    if (favs.has(s.u)) { favs.delete(s.u); delete fmeta[s.u]; showToast("removed"); }
+    else { favs.add(s.u); fmeta[s.u] = s; showToast("saved"); }
     try {
       localStorage.setItem("rv_favs", JSON.stringify([...favs]));
       localStorage.setItem("rv_fmeta", JSON.stringify(fmeta));
@@ -2074,7 +2131,7 @@
     if (!arr.length) {
       const e = document.createElement("div");
       e.className = "empty-msg";
-      e.textContent = "No saved stations";
+      e.textContent = "No saved stations yet";
       favList.appendChild(e);
       return;
     }
@@ -2096,18 +2153,25 @@
       rm.innerHTML = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
       rm.onclick = ev => { ev.stopPropagation(); toggleFav(s); renderFavs(); };
       d.appendChild(info); d.appendChild(rm);
-      d.onclick = () => { favSheet.classList.add("hidden"); playStation(s); };
+      d.onclick = () => { closeSheet(); playStation(s); };
       frag.appendChild(d);
     }
     favList.appendChild(frag);
   }
 
-  favBtn.onclick = () => {
-    buzz();
-    if (favSheet.classList.contains("hidden")) { renderFavs(); favSheet.classList.remove("hidden"); }
-    else favSheet.classList.add("hidden");
-  };
-  favClose.onclick = () => favSheet.classList.add("hidden");
+  function openSheet() {
+    renderFavs();
+    favSheet.classList.add("open");
+    sheetBackdrop.classList.add("open");
+  }
+  function closeSheet() {
+    favSheet.classList.remove("open");
+    sheetBackdrop.classList.remove("open");
+  }
+
+  favBtn.onclick = () => { buzz(); openSheet(); };
+  favClose.onclick = () => { buzz(); closeSheet(); };
+  sheetBackdrop.onclick = () => closeSheet();
 
   // ============================================================
   // VOLUME
@@ -2116,7 +2180,6 @@
     lastVol = Math.min(1, Math.max(0, v));
     audioEl.volume = lastVol;
     const pct = Math.round(lastVol * 100);
-    volPct.textContent = pct + "%";
     volSlider.value = pct;
     volSlider.style.background = `linear-gradient(90deg, var(--accent) ${pct}%, var(--line) ${pct}%)`;
   }
@@ -2150,64 +2213,117 @@
     });
   })();
 
-  // ============================================================
-  // COUNTRY CHANGE
-  // ============================================================
-  countrySel.addEventListener("change", () => {
+  // Double-click frequency = random station
+  freqWrap.addEventListener("dblclick", () => {
+    if (!DIAL.length) return;
     buzz();
-    applyPool();
+    const ri = Math.floor(Math.random() * DIAL.length);
+    tuneTo(ri, true);
+    showToast("random");
   });
 
   // ============================================================
-  // DATA SOURCE UI
+  // COUNTRY
   // ============================================================
-  loadDataBtn.onclick = async () => {
-    const url = (dataUrlInput.value || "").trim().replace(/\/+$/, "");
-    if (!url) return;
-    setStatus("loading…");
-    const loaded = await tryLoadFromBase(url, url);
-    if (loaded) { dataSource = url; try { localStorage.setItem("rv_src", url); } catch(e){} applyLoaded(loaded); }
-    else setStatus("source failed", "err");
-  };
-  resetDataBtn.onclick = async () => {
-    dataUrlInput.value = "";
-    try { localStorage.removeItem("rv_src"); localStorage.removeItem(CACHE_KEY); } catch(e){}
-    boot();
-  };
-
-  try {
-    const saved = localStorage.getItem("rv_src");
-    if (saved) dataUrlInput.value = saved;
-  } catch(e){}
+  countrySel.addEventListener("change", () => { buzz(); applyPool(); });
 
   // ============================================================
-  // LOAD FROM A BASE URL (perchance-style: index.json + top.json)
+  // FULLSCREEN
   // ============================================================
-  async function tryLoadFromBase(base, label) {
-    try {
-      const idx = await fetchT(base + "/index.json", 6000).then(r => {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.json();
-      });
-      if (!idx || !idx.countries) throw new Error("bad index");
-      const [top, gj] = await Promise.all([
-        fetchT(base + "/top.json", 8000).then(r => r.ok ? r.json() : []).catch(() => []),
-        fetchT(base + "/genres.json", 8000).then(r => r.ok ? r.json() : { genres: [] }).catch(() => ({ genres: [] })),
-      ]);
-      return { source: label, idx, top: Array.isArray(top) ? top : [], genres: gj.genres || [] };
-    } catch(e) { return null; }
+  fullscreenBtn.onclick = () => {
+    buzz();
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen && document.exitFullscreen();
+    }
+  };
+
+  // ============================================================
+  // KEYBOARD
+  // ============================================================
+  let hintsTimer = null;
+  function flashHints() {
+    kbHints.classList.add("show");
+    clearTimeout(hintsTimer);
+    hintsTimer = setTimeout(() => kbHints.classList.remove("show"), 2600);
   }
 
-  function applyLoaded(loaded) {
-    ALL = []; seenUrls = new Set();
-    addStations(loaded.top || []);
-    // Build country index from the perchance data
-    if (loaded.idx && loaded.idx.countries) {
-      const countries = loaded.idx.countries.slice().sort((a,b) => (b.parts||0) - (a.parts||0));
+  document.addEventListener("keydown", e => {
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select") return;
+
+    switch (e.key) {
+      case " ":
+      case "k":
+        e.preventDefault();
+        playBtn.click();
+        flashHints();
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        prevBtn.click();
+        flashHints();
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        nextBtn.click();
+        flashHints();
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setVol(lastVol + 0.05);
+        flashHints();
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        setVol(lastVol - 0.05);
+        flashHints();
+        break;
+      case "s":
+      case "S":
+        scanBtn.click();
+        flashHints();
+        break;
+      case "f":
+      case "F":
+        if (current) toggleFav(current);
+        else favBtn.click();
+        flashHints();
+        break;
+      case "t":
+      case "T":
+        sleepBtn.click();
+        flashHints();
+        break;
+      case "c":
+      case "C":
+        shareBtn.click();
+        flashHints();
+        break;
+      case "Escape":
+        closeSheet();
+        break;
+    }
+  });
+
+  // First-load hint
+  setTimeout(flashHints, 1800);
+
+  // ============================================================
+  // BOOT
+  // ============================================================
+  async function boot() {
+    // Try perchance first
+    const perch = await tryLoadFromBase(PERCHANCE_BASE, "perchance");
+    if (perch) {
+      ALL = []; seenUrls = new Set();
+      addStations(perch.top || []);
+      const countries = perch.idx.countries.slice().sort((a,b) => (b.parts||0) - (a.parts||0));
       countrySel.innerHTML = "";
       const allOpt = document.createElement("option");
       allOpt.value = "__ALL__";
-      allOpt.textContent = `All regions (${loaded.idx.total || ALL.length})`;
+      allOpt.textContent = `All regions · ${(perch.idx.total || ALL.length).toLocaleString()}`;
       countrySel.appendChild(allOpt);
       for (const c of countries) {
         const o = document.createElement("option");
@@ -2215,73 +2331,47 @@
         o.textContent = (flag(c.cc) ? flag(c.cc) + " " : "") + (c.c || c.cc);
         countrySel.appendChild(o);
       }
-      stationCount.textContent = (loaded.idx.total || ALL.length).toLocaleString() + " stations";
+      countrySel.value = "__ALL__";
+      applyPool();
+      setStatus("live", "on");
+      return;
     }
-    countrySel.value = "__ALL__";
-    applyPool();
-    setStatus(loaded.source, "live");
-  }
 
-  // ============================================================
-  // BOOT
-  // ============================================================
-  async function boot() {
-    // 1. Kick off perchance + local in parallel
-    const [perch, local] = await Promise.all([tryPerchance(), tryLocal()]);
-    if (local) { applyLoaded(local); return; }
-    if (perch) { applyLoaded(perch); return; }
-
-    // 2. Cached RB data?
+    // Cached RB?
     const cached = readCache();
     if (cached && cached.length) {
-      populateFromList(cached, "cached", "warn");
-      // refresh in background
+      populateFromList(cached, "cached", "on");
       fetchFromRadioBrowser().then(fresh => {
         if (fresh && fresh.length) {
           writeCache(fresh);
-          populateFromList(fresh, "radio-browser", "live");
+          populateFromList(fresh, "live", "on");
         }
       });
       return;
     }
 
-    // 3. Fetch fresh from RB
+    // Fresh RB
     const fresh = await fetchFromRadioBrowser();
     if (fresh && fresh.length) {
       writeCache(fresh);
-      populateFromList(fresh, "radio-browser", "live");
+      populateFromList(fresh, "live", "on");
       return;
     }
 
-    // 4. Demo fallback
+    // Demo fallback
     loadDemo();
   }
 
-  // ============================================================
-  // DEMO FALLBACK (minimal — RB usually works)
-  // ============================================================
   function loadDemo() {
     const demo = [
       { n: "SomaFM Groove Salad", u: "https://ice1.somafm.com/groovesalad-128-mp3", cc: "US", l: "United States", t: "ambient, electronic", https: true, v: 5000 },
       { n: "SomaFM Drone Zone", u: "https://ice1.somafm.com/dronezone-128-mp3", cc: "US", l: "United States", t: "ambient", https: true, v: 4800 },
-      { n: "SomaFM Lush", u: "https://ice1.somafm.com/lush-128-mp3", cc: "US", l: "United States", t: "chillout, vocal", https: true, v: 4600 },
-      { n: "SomaFM Beat Blender", u: "https://ice1.somafm.com/beatblender-128-mp3", cc: "US", l: "United States", t: "house, deep", https: true, v: 4400 },
-      { n: "SomaFM DEF CON", u: "https://ice1.somafm.com/defcon-128-mp3", cc: "US", l: "United States", t: "electronic", https: true, v: 4200 },
-      { n: "SomaFM Underground 80s", u: "https://ice1.somafm.com/u80s-128-mp3", cc: "US", l: "United States", t: "80s, new wave", https: true, v: 4000 },
-      { n: "SomaFM Indie Pop Rocks", u: "https://ice1.somafm.com/indiepop-128-mp3", cc: "US", l: "United States", t: "indie, pop", https: true, v: 3800 },
-      { n: "SomaFM Secret Agent", u: "https://ice1.somafm.com/secretagent-128-mp3", cc: "US", l: "United States", t: "lounge, spy jazz", https: true, v: 3600 },
-      { n: "SomaFM Space Station", u: "https://ice1.somafm.com/spacestation-128-mp3", cc: "US", l: "United States", t: "ambient, space", https: true, v: 3400 },
+      { n: "SomaFM Lush", u: "https://ice1.somafm.com/lush-128-mp3", cc: "US", l: "United States", t: "chillout", https: true, v: 4600 },
       { n: "Radio Paradise", u: "https://stream.radioparadise.com/mp3-192", cc: "US", l: "United States", t: "eclectic, rock", https: true, v: 5200 },
-      { n: "Radio Paradise Mellow", u: "https://stream.radioparadise.com/mellow-192", cc: "US", l: "United States", t: "mellow, chill", https: true, v: 4800 },
-      { n: "BBC Radio 1", u: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one", cc: "GB", l: "United Kingdom", t: "pop, dance", https: true, v: 9000 },
       { n: "BBC Radio 6 Music", u: "https://stream.live.vc.bbcmedia.co.uk/bbc_6music", cc: "GB", l: "United Kingdom", t: "alternative, indie", https: true, v: 8500 },
-      { n: "BBC World Service", u: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service", cc: "GB", l: "United Kingdom", t: "news, world", https: true, v: 8000 },
       { n: "FIP", u: "https://icecast.radiofrance.fr/fip-midfi.mp3", cc: "FR", l: "France", t: "eclectic, jazz", https: true, v: 7000 },
-      { n: "France Inter", u: "https://icecast.radiofrance.fr/franceinter-midfi.mp3", cc: "FR", l: "France", t: "talk, news", https: true, v: 6800 },
-      { n: "France Musique", u: "https://icecast.radiofrance.fr/francemusique-midfi.mp3", cc: "FR", l: "France", t: "classical", https: true, v: 6600 },
       { n: "Jazz24", u: "https://live.wostreaming.net/direct/ppm-jazz24mp3-ibc1", cc: "US", l: "United States", t: "jazz", https: true, v: 6400 },
       { n: "KEXP", u: "https://kexp-mp3-128.streamguys1.com/kexp128.mp3", cc: "US", l: "United States", t: "alternative", https: true, v: 6200 },
-      { n: "NPO Radio 4", u: "https://icecast.omroep.nl/radio4-bb-mp3", cc: "NL", l: "Netherlands", t: "classical", https: true, v: 6000 },
     ];
     ALL = []; seenUrls = new Set();
     addStations(demo);
@@ -2291,35 +2381,30 @@
       if (!byCountry[cc]) byCountry[cc] = { cc, c: s.l, count: 0 };
       byCountry[cc].count++;
     }
-    const countries = Object.values(byCountry).sort((a,b) => b.count - a.count);
     countrySel.innerHTML = "";
     const allOpt = document.createElement("option");
-    allOpt.value = "__ALL__"; allOpt.textContent = `All regions (${demo.length})`;
+    allOpt.value = "__ALL__"; allOpt.textContent = `All regions · ${demo.length}`;
     countrySel.appendChild(allOpt);
-    for (const c of countries) {
+    for (const c of Object.values(byCountry)) {
       const o = document.createElement("option");
       o.value = c.cc;
-      o.textContent = flag(c.cc) + " " + c.c + " (" + c.count + ")";
+      o.textContent = flag(c.cc) + " " + c.c + " · " + c.count;
       countrySel.appendChild(o);
     }
-    stationCount.textContent = demo.length + " stations";
     countrySel.value = "__ALL__";
     applyPool();
-    setStatus("demo mode", "warn");
+    setStatus("demo", "demo");
   }
 
-  // ============================================================
-  // INIT
-  // ============================================================
+  // init
   buildTicks();
   paint(false);
   setVol(0.8);
 
   boot().catch(e => {
     console.warn("[radio] boot error:", e);
-    setStatus("boot error", "err");
-    buildTicks();
-    paint(false);
+    setStatus("error", "err");
+    loadDemo();
   });
 
   window.addEventListener("resize", () => {
@@ -2328,114 +2413,9 @@
     paint(false);
   });
 
-  // ============================================================
-  // EDITOR (file:// + #edit)
-  // ============================================================
-  document.addEventListener("DOMContentLoaded", function() {
-    if (!window.location.href.startsWith("file:") || window.location.hash !== "#edit") return;
-    const originalHtmlText = document.documentElement.outerHTML;
-    const parseNotjsData = t => {
-      try { return JSON.parse(t[0] === "{" || t[0] === "[" ? t : decodeURI(t)); }
-      catch(e) { return null; }
-    };
-    const preEl = document.querySelector("#preloaded-generator-data");
-    const impEl = document.querySelector("#imported-generators");
-    if (!preEl) return;
-    const preData = parseNotjsData(preEl.textContent);
-    const impGens = impEl ? parseNotjsData(impEl.textContent) : [];
-    if (!preData) return;
-
-    const overlay = document.getElementById("editorOverlay");
-    overlay.classList.remove("hidden");
-    overlay.innerHTML = "";
-
-    const header = document.createElement("div");
-    header.className = "editor-header";
-    header.innerHTML = '<button class="drag-handle">⠿ drag</button><button class="save-button">save</button><div class="editor-tabs"></div>';
-    overlay.appendChild(header);
-    const body = document.createElement("div");
-    body.className = "editor-body";
-    overlay.appendChild(body);
-
-    (function makeDraggable(el){
-      const dh = el.querySelector(".drag-handle");
-      let sx, sy, ex, ey;
-      dh.addEventListener("mousedown", e => {
-        e.preventDefault();
-        sx = e.clientX; sy = e.clientY;
-        document.addEventListener("mouseup", close);
-        document.addEventListener("mousemove", move);
-      });
-      function move(e){
-        e.preventDefault();
-        ex = sx - e.clientX; ey = sy - e.clientY;
-        sx = e.clientX; sy = e.clientY;
-        el.style.top = (el.offsetTop - ey) + "px";
-        el.style.left = (el.offsetLeft - ex) + "px";
-      }
-      function close(){
-        document.removeEventListener("mouseup", close);
-        document.removeEventListener("mousemove", move);
-      }
-    })(overlay);
-
-    const editors = [
-      { name: preData.name, content: preData.modelText, main: true, type: "lists", visible: true },
-      { name: preData.name, content: preData.outputTemplate, main: true, type: "html", visible: false },
-    ];
-    for (const g of (impGens || [])) editors.push({ name: g.name, content: g.modelText, visible: false });
-
-    function save() {
-      const pNew = JSON.parse(JSON.stringify(preData));
-      pNew.modelText = editors.find(e => e.main && e.type === "lists").textArea.value;
-      pNew.outputTemplate = editors.find(e => e.main && e.type === "html").textArea.value;
-      const iNew = JSON.parse(JSON.stringify(impGens || []));
-      for (const e of editors) {
-        if (e.main) continue;
-        const f = iNew.find(x => x.name === e.name);
-        if (f) f.modelText = e.textArea.value;
-      }
-      let text = originalHtmlText;
-      text = text.replace(/(<script id="preloaded-generator-data"[^>]*>)(.+?)(<\/script>)/, `$1${encodeURI(JSON.stringify(pNew))}$3`);
-      text = text.replace(/(<script id="imported-generators"[^>]*>)(.+?)(<\/script>)/, `$1${encodeURI(JSON.stringify(iNew))}$3`);
-      const blob = new Blob([text], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = pNew.name + ".html";
-      a.style.display = "none";
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    }
-
-    header.querySelector(".save-button").onclick = save;
-    document.addEventListener("keydown", e => {
-      if (e.key === "s" && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) { e.preventDefault(); save(); }
-    });
-
-    const tabsC = header.querySelector(".editor-tabs");
-    for (const ed of editors) {
-      const ta = document.createElement("textarea");
-      ta.style.display = ed.visible ? "block" : "none";
-      ta.value = ed.content;
-      body.appendChild(ta);
-      ed.textArea = ta;
-      const btn = document.createElement("button");
-      btn.textContent = ed.name + (ed.type === "html" ? " (html)" : "");
-      if (ed.main) btn.style.fontWeight = "600";
-      if (ed.visible) btn.classList.add("active");
-      btn.onclick = () => {
-        editors.forEach(x => { x.textArea.style.display = "none"; x.tabButton.classList.remove("active"); });
-        ta.style.display = "block"; btn.classList.add("active");
-      };
-      tabsC.appendChild(btn);
-      ed.tabButton = btn;
-    }
-
-    let attempts = 0;
-    const iv = setInterval(() => {
-      if (!document.body.contains(overlay)) document.body.appendChild(overlay);
-      if (++attempts > 20) clearInterval(iv);
-    }, 500);
+  // fullscreen button icon sync
+  document.addEventListener("fullscreenchange", () => {
+    fullscreenBtn.title = document.fullscreenElement ? "Exit fullscreen" : "Fullscreen";
   });
 
 })();
